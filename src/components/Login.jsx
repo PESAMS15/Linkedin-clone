@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react'
 import * as yup from "yup"
 import axios from 'axios'
 import log from "../Assets/OIP.jpeg"
+import { useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 const Login = () => {
     const [alluser, setalluser] = useState(null)
+    const navigate = useNavigate()
     const [err, seterr] = useState("")
     useEffect(() => {
       axios.get("http://localhost:5690/signup")
@@ -18,12 +20,10 @@ const Login = () => {
     }, [])
     const formik = useFormik({
         initialValues:{
-            username: "",
             email: "",
             password: ""
         },  
         validationSchema: yup.object({
-            username: yup.string().required("this field is required"),
             email: yup.string().email("Must be a valid email ").required("this field is required"),
             password: yup.string().required("this field is required")
         }),
@@ -32,13 +32,20 @@ const Login = () => {
             let exist = alluser.find((el)=> el.email === values.email && el.password=== values.password)
             console.log(exist);
             if(exist){
-                toast.success(`Login Successfu`)
+                toast.success(`Login Successful`)
+                let save = localStorage.setItem("user", JSON.stringify(exist))
+                setTimeout(() => {
+                    navigate("/home")
+                }, 2000);
             }
             else{
                toast.error("Incorrect email or password")
             }
         }
     })
+    console.log(formik.errors)
+
+    
 
   return (
     <div>
@@ -46,11 +53,6 @@ const Login = () => {
             <div className='mt-3'>
             <img className="w-32 mx-auto rounded-full" src={log} alt="" />
             <h1 className="text-black font-bold text-center">Login</h1>
-            </div>
-            <div className="form-group d-none">
-                <label htmlFor="" className='font-bold text-sm text-'>Username</label>
-                <input name='username' onChange={formik.handleChange}  type="text" className={formik.errors.username? "is-invalid form-control": "form-control"} />
-                <small className='text-danger'>{formik.errors.username}</small>
             </div>
             <div className="form-group">
                 <label htmlFor="" className='font-bold text-sm text-'>email</label>

@@ -10,6 +10,8 @@ import "react-toastify/dist/ReactToastify.css"
 import reportWebVitals from './reportWebVitals';
 import Login from './components/Login';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Modal from './components/Modal';
+// import Mode from './components/Mode';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -19,6 +21,7 @@ root.render(
         <Route path='/home' element={<App />} />
           <Route path='/signup' element={<Signup />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/mode' element={<Modal />} />
 
         </Routes>
     {/* <Signup /> */}
