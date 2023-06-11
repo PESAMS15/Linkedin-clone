@@ -6,14 +6,23 @@ import Nav from './components/Nav';
 import "bootstrap/dist/css/bootstrap.min.css"
 import Signup from './components/Signup';
 import "bootstrap/dist/js/bootstrap.bundle"
+import "react-toastify/dist/ReactToastify.css"
 import reportWebVitals from './reportWebVitals';
+import Login from './components/Login';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    {/* <App /> */}
-    <Nav />
+    <BrowserRouter>
+        <Routes>
+        <Route path='/home' element={<App />} />
+          <Route path='/signup' element={<Signup />} />
+          <Route path='/login' element={<Login />} />
+
+        </Routes>
     {/* <Signup /> */}
+    </BrowserRouter>
 
   </React.StrictMode>
 );

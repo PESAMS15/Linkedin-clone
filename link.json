@@ -1,5 +1,28 @@
 {
-    "signUp": [
-        
-    ]
+  "signUp": [
+    {
+      "username": "Samuel",
+      "email": "pesams015@gmail.com",
+      "password": "pesams",
+      "id": 1
+    },
+    {
+      "username": "pesams",
+      "email": "persyboi15@gmail.com",
+      "password": "pesams12",
+      "id": 2
+    },
+    {
+      "username": "Samue",
+      "email": "pesam015@gmail.com",
+      "password": "123345",
+      "id": 3
+    },
+    {
+      "username": "PESAMS",
+      "email": "ayijomo@gmail.com",
+      "password": "PESAMS",
+      "id": 4
+    }
+  ]
 }

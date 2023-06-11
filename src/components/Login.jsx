@@ -4,11 +4,8 @@ import { useState, useEffect } from 'react'
 import * as yup from "yup"
 import axios from 'axios'
 import log from "../Assets/OIP.jpeg"
-import { useNavigate } from 'react-router-dom'
-import { Link } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
-const Signup = () => {
-    const navigate = useNavigate()
+const Login = () => {
     const [alluser, setalluser] = useState(null)
     const [err, seterr] = useState("")
     useEffect(() => {
@@ -19,7 +16,6 @@ const Signup = () => {
             console.log(err)
       })
     }, [])
-    console.log(alluser)
     const formik = useFormik({
         initialValues:{
             username: "",
@@ -27,28 +23,19 @@ const Signup = () => {
             password: ""
         },  
         validationSchema: yup.object({
-            username: yup.string().min(5, "Name must have at least 6 characters").required("this field is required"),
+            username: yup.string().required("this field is required"),
             email: yup.string().email("Must be a valid email ").required("this field is required"),
-            password: yup.string().min(6, "password too short").max(8, "password too long").required("this field is required")
+            password: yup.string().required("this field is required")
         }),
         onSubmit: (values)=>{
             console.log(values)
-            let exist = alluser.find((el)=> el.email === values.email || el.username=== values.username)
+            let exist = alluser.find((el)=> el.email === values.email && el.password=== values.password)
             console.log(exist);
             if(exist){
-                toast.error("User already exist")
+                toast.success(`Login Successfu`)
             }
             else{
-                axios.post("http://localhost:5690/signup", values)
-                .then((res)=>{
-                    console.log(res)
-                    toast.success("registration Successful")
-                }).then(navigate("/login"))
-                .catch((err)=>{
-                    console.log(err)
-                    seterr(err)
-                    toast.error("registration Failed")
-                })
+               toast.error("Incorrect email or password")
             }
         }
     })
@@ -58,9 +45,9 @@ const Signup = () => {
             <form className='w-full text-center p-3 mx-auto shadow-lg   flex flex-col gap-y-9 md:w-1/2 shadow-md-none' onSubmit={formik.handleSubmit} action="">
             <div className='mt-3'>
             <img className="w-32 mx-auto rounded-full" src={log} alt="" />
-            <h1 className="text-black font-bold text-center">Sign up</h1>
+            <h1 className="text-black font-bold text-center">Login</h1>
             </div>
-            <div className="form-group">
+            <div className="form-group d-none">
                 <label htmlFor="" className='font-bold text-sm text-'>Username</label>
                 <input name='username' onChange={formik.handleChange}  type="text" className={formik.errors.username? "is-invalid form-control": "form-control"} />
                 <small className='text-danger'>{formik.errors.username}</small>
@@ -78,7 +65,6 @@ const Signup = () => {
 
             </div>
             <button type='submit'  className='py-3 rounded bg-black text-white font-bold w-75 mx-auto '>Register</button>
-            <Link to="/login" className="text-xs">already have an account, login</Link>
             <ToastContainer 
                 position="top-right"
                 autoClose={5000}
@@ -96,4 +82,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default Login
