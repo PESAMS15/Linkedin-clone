@@ -24,12 +24,14 @@ const Signup = () => {
         initialValues:{
             username: "",
             email: "",
-            password: ""
+            password: "",
+            profilePic: ""
         },  
         validationSchema: yup.object({
             username: yup.string().min(5, "Name must have at least 6 characters").required("this field is required"),
             email: yup.string().email("Must be a valid email ").required("this field is required"),
-            password: yup.string().min(6, "password too short").max(8, "password too long").required("this field is required")
+            password: yup.string().min(6, "password too short").max(8, "password too long").required("this field is required"),
+            profilePic: yup.string().default("https://th.bing.com/th/id/OIP.1DLYAqE5UY19idJJOkFQegHaHa?w=205&h=205&c=7&r=0&o=5&pid=1.7")
         }),
         onSubmit: (values)=>{
             console.log(values)

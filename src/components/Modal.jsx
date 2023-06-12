@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify'
 
 
 
+
 export default function Example({opened, closed }) {
     const [image, setImage] = useState('');
     const [content, setcontent] = useState("")
@@ -31,17 +32,49 @@ export default function Example({opened, closed }) {
 
   const cancelButtonRef = useRef(null)
 
-  const post = ()=>{
-    let data = {
-        content,
-        img: image
+  const post = () => {
+    const currentTime = new Date();
+    const timeDifference = Math.floor((currentTime - new Date()) / 60000); // Calculate the time difference in minutes
+  
+    let publishedAt = '';
+  
+    if (timeDifference < 1) {
+      publishedAt = 'Just now';
+    } else if (timeDifference < 60) {
+      publishedAt = `${timeDifference} minutes ago`;
+    } else if (timeDifference < 1440) {
+      const hoursAgo = Math.floor(timeDifference / 60);
+      publishedAt = `${hoursAgo} hours ago`;
+    } else {
+      const daysAgo = Math.floor(timeDifference / 1440);
+      publishedAt = `${daysAgo} days ago`;
     }
-    axios.post("http://localhost:5690/posts", data)
-    .then((res)=>{
-        console.log(res)
-        toast.success("registration Successful")
-    })
-  }
+  
+    let data = {
+      author: coref.username,
+      content,
+      profilePic: coref.profilePic,
+      img: image,
+      publishedAt: publishedAt // Add the formatted time string to the data
+    };
+  
+    axios
+      .post('http://localhost:5690/posts', data)
+      .then((res) => {
+        console.log(res);
+        toast.success('Post successful');
+      })
+      .then(() => {
+        setImage('');
+        setcontent('');
+        closed();
+      })
+      .catch((error) => {
+        console.error('Error posting:', error);
+        toast.error('Error posting');
+      });
+  };
+  
 
   return (
     <Transition.Root show={opened} as={Fragment}>
@@ -69,10 +102,13 @@ export default function Example({opened, closed }) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg px-3 p-2 bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg px-3 p-2 bg-white m-auto text-left shadow-xl transition-all w-full  sm:w-1/2 md:1/3 ">
               <div className="text-end items-center  flex justify-between">
                 <div>
-                <h3>{coref.username}</h3>
+                <div className="flex gap-2">
+                <img className='w-10' src={coref? coref.profilePic : ""} alt="" />
+                <h3>{coref? coref.username : "User"}</h3>
+                </div>
                 </div>
               <button
                     type="button"
@@ -84,8 +120,8 @@ export default function Example({opened, closed }) {
                   </button>
               </div>
               <div>
-                    <textarea placeholder='What do u want to talk about' onChange={(e)=> setcontent(e.target.value)} className='w-full p-3 focus:outline-none' name="" id="" cols="40" rows="10"></textarea>
-                    {image && <img className="w-full " src={image} alt="Selected" />}
+                    <input value={content} placeholder='What do u want to talk about' onChange={(e)=> setcontent(e.target.value)} className='w-full p-3 focus:outline-none py-3' ></input>
+                    {image && <img className="w-full rounded " src={image} alt="Selected" />}
                     <div className="flex gap-3 items-center">
                         <div className="">
                            <label className='p-3 mt-1 text-2xl rounded-full bg-slate-200 ' htmlFor="photo"> <HiPhotograph  /></label> <input type="file" onChange={handleImageChange} className='hidden' id='photo' />
@@ -94,9 +130,21 @@ export default function Example({opened, closed }) {
                         <div className="p-3 text-2xl rounded-full bg-slate-200 "><HiCalendarDays  /></div>
                     </div>
                     <hr />
-                    <div className="py-2 flex justify-end">
-                        <button onClick={post} className='bg-black text-white p-2 rounded font-bold'>post</button>
+                    <div className="py-2  flex justify-end">
+                        <button onClick={post} className='bg-black text-white p-2 px-3 rounded font-bold'>post</button>
                     </div>
+                    <ToastContainer 
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
               </div>
               
                 
